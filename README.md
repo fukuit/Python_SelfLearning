@@ -1,1 +1,2 @@
 # Python_SelfLearning
+Pythonの自習を始めたので、チュートリアルを丸写しにしながら作成したファイル類置き場。

@@ -8,7 +8,7 @@ import cv2
 import os
 
 def convert_and_count( dir, ext ):
-    for root,dir,files in os.walk(dir):
+    for root,dirs,files in os.walk(dir):
         for f in files:
             fname, fext = os.path.splitext(f)
             if fext == ext:

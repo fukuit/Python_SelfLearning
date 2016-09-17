@@ -7,22 +7,23 @@ import numpy as np
 import cv2
 import os
 
-def convert_and_count( dir, ext ):
-    for root,dirs,files in os.walk(dir):
+
+def convert_and_count(target, ext):
+    for root, dirs, files in os.walktarget):
         for f in files:
             fname, fext = os.path.splitext(f)
             if fext == ext:
                 img = cv2.imread(os.path.join(root, f), 0)
-                blur = cv2.GaussianBlur(img,(5,5),0)
-                ret,imgb = cv2.threshold(blur,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+                blur = cv2.GaussianBlur(img, (5, 5), 0)
+                ret, imgb = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
                 cv2.imwrite(os.path.join(root, fname + ".bin.png"), imgb)
                 cnt = 0
                 for val in imgb.flat:
                     if val == 0:
-                        cnt+=1
+                        cnt += 1
                 ratio = cnt / img.size
                 msg = "%s:\t%.5f" % (f, ratio)
-                print( msg )
+                print(msg)
 
 if __name__ == "__main__":
-    convert_and_count( "img", ".tiff" )
+    convert_and_count("img", ".tiff")

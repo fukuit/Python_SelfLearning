@@ -16,8 +16,8 @@ iris_predict = svm.SVC().fit(iris_data_train, iris_target_train).predict(iris_da
 cm = confusion_matrix(iris_target_test, iris_predict)
 cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 ascore = accuracy_score(iris_target_test, iris_predict)
-print (cm)
-print ("accuracy score: %.5f" % ascore)
+print(cm)
+print("accuracy score: %.5f" % ascore)
 
 def plot_confusion_matrix(cm, title='Confusion matrix', cmap=plt.cm.Blues):
     ''' confusion_matrixをheatmap表示する関数

@@ -16,7 +16,8 @@ ref_dicom = dicom.read_file(dcms[0])
 
 # 円に切り抜くためのマスクを作成する
 x, y = np.indices((ref_dicom.Rows, ref_dicom.Columns))
-circle = (x - (ref_dicom.Columns / 2))**2 + (y - (ref_dicom.Rows / 2))**2 < 64**2
+r = ref_dicom.pixel_array.shape[0]/4
+circle = (x - (ref_dicom.Columns / 2))**2 + (y - (ref_dicom.Rows / 2))**2 < r**2
 mask = circle.astype(int)
 
 # 全ての画像にmask処理を実施する

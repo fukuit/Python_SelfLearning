@@ -2,7 +2,12 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
+
 def matchAB(fileA, fileB):
+    '''
+    fileAとfileBの間違い探しのヒントを表示する
+    '''
+
     # 画像の読み込み
     imgA = cv2.imread(fileA)
     imgB = cv2.imread(fileB)
@@ -19,14 +24,14 @@ def matchAB(fileA, fileB):
         for start_x in range(0, width-100, 50):
             window = grayA[start_y:start_y+100, start_x:start_x+100]
             match = cv2.matchTemplate(grayB, window, cv2.TM_CCOEFF_NORMED)
-            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(match)
+            _, _, _, max_loc = cv2.minMaxLoc(match)
             matched_window = grayB[max_loc[1]:max_loc[1]+100, max_loc[0]:max_loc[0]+100]
             result = cv2.absdiff(window, matched_window)
             result_window[start_y:start_y+100, start_x:start_x+100] = result
 
     # マッチングした結果できた差分画像の輪郭を抽出し、四角で囲む
     _, result_window_bin = cv2.threshold(result_window, 127, 255, cv2.THRESH_BINARY)
-    image, contours, hierarchy = cv2.findContours(result_window_bin, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    _, contours, _ = cv2.findContours(result_window_bin, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     imgC = imgA.copy()
     for contour in contours:
         min = np.nanmin(contour, 0)

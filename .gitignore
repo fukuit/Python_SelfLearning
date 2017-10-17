@@ -15,3 +15,5 @@
 *.gif
 *.tif
 *.tiff
+
+log/

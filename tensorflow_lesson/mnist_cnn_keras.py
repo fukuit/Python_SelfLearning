@@ -10,6 +10,7 @@ from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
 from keras.optimizers import RMSprop
 from keras.callbacks import Callback, CSVLogger
 from matplotlib import pyplot as plt
+from sklearn.model_selection import train_test_split
 import argparse
 
 
@@ -85,12 +86,17 @@ def main(epochs=5, batch_size=128):
 
     # load MNIST data
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    x_train1, x_valid, y_train1, y_valid = train_test_split(x_train, y_train, test_size=0.175)
+    x_train = x_train1
+    y_train = y_train1
 
     x_train = x_train.reshape(x_train.shape[0], 28, 28, 1).astype('float32')/255
+    x_valid = x_valid.reshape(x_valid.shape[0], 28, 28, 1).astype('float32')/255
     x_test = x_test.reshape(x_test.shape[0], 28, 28, 1).astype('float32')/255
 
     # convert one-hot vector
     y_train = keras.utils.to_categorical(y_train, 10)
+    y_valid = keras.utils.to_categorical(y_valid, 10)
     y_test = keras.utils.to_categorical(y_test, 10)
 
     # create model
@@ -120,7 +126,7 @@ def main(epochs=5, batch_size=128):
     history = model.fit(x_train, y_train,
                         batch_size=batch_size, epochs=epochs,
                         verbose=1,
-                        validation_data=(x_test, y_test),
+                        validation_data=(x_valid, y_valid),
                         callbacks=[plot_losses, csv_logger])
 
     # result

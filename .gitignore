@@ -16,4 +16,6 @@
 *.tif
 *.tiff
 
+*.csv
+
 log/

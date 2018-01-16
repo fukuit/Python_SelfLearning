@@ -24,6 +24,7 @@ class PlotLosses(Callback):
         訓練開始時に実施
         '''
         self.epoch_cnt = 0      # epochの回数を初期化
+        plt.axis([0, self.epochs, 0, 0.25])
         plt.ion()               # pyplotをinteractive modeにする
 
     def on_train_end(self, logs={}):
@@ -116,13 +117,12 @@ def main(epochs=5, batch_size=128):
 
     print(model.summary())
 
-    # train
-    plt.axis([0, epochs, 0, 0.25])
-
     # callback function
     plot_losses = PlotLosses()      # グラフ表示(live plot)
+    plot_losses.epochs = epochs
     csv_logger = CSVLogger('trainlog.csv')
 
+    # train
     history = model.fit(x_train, y_train,
                         batch_size=batch_size, epochs=epochs,
                         verbose=1,

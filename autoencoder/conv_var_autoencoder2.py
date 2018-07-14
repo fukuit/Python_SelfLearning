@@ -12,6 +12,18 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import cv2
 
+# MNISTデータを前処理する
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+x_train, x_valid, y_train, y_valid = train_test_split(x_train, y_train, test_size=0.175)
+# 正規化する
+x_train = x_train.astype('float32')/255.
+x_valid = x_valid.astype('float32')/255.
+x_test = x_test.astype('float32')/255.
+x_train = np.reshape(x_train, (len(x_train), img_size, img_size, 1))
+x_valid = np.reshape(x_valid, (len(x_valid), img_size, img_size, 1))
+x_test = np.reshape(x_test, (len(x_test), img_size, img_size, 1))
+
+image_size = x_train.shape[1]
 # network parameters
 input_shape = (image_size, image_size, 1)
 batch_size = 64
@@ -95,17 +107,6 @@ vae_loss = K.mean(reconstruction_loss + kl_loss)
 autoencoder.add_loss(vae_loss)
 autoencoder.compile(optimizer='adam')
 autoencoder.summary()
-
-# MNISTデータを前処理する
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
-x_train, x_valid, y_train, y_valid = train_test_split(x_train, y_train, test_size=0.175)
-# 正規化する
-x_train = x_train.astype('float32')/255.
-x_valid = x_valid.astype('float32')/255.
-x_test = x_test.astype('float32')/255.
-x_train = np.reshape(x_train, (len(x_train), img_size, img_size, 1))
-x_valid = np.reshape(x_valid, (len(x_valid), img_size, img_size, 1))
-x_test = np.reshape(x_test, (len(x_test), img_size, img_size, 1))
 
 # 学習に使うデータを1に限定する
 x_train = x_train[y_train==1]

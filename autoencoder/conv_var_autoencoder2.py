@@ -14,23 +14,24 @@ import cv2
 
 # MNISTデータを前処理する
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
+image_size = x_train.shape[1]
+
 x_train, x_valid, y_train, y_valid = train_test_split(x_train, y_train, test_size=0.175)
 # 正規化する
 x_train = x_train.astype('float32')/255.
-x_valid = x_valid.astype('float32')/255.
 x_test = x_test.astype('float32')/255.
-x_train = np.reshape(x_train, (len(x_train), img_size, img_size, 1))
-x_valid = np.reshape(x_valid, (len(x_valid), img_size, img_size, 1))
-x_test = np.reshape(x_test, (len(x_test), img_size, img_size, 1))
+x_train = np.reshape(x_train, (len(x_train), image_size, image_size, 1))
+x_test = np.reshape(x_test, (len(x_test), image_size, image_size, 1))
 
-image_size = x_train.shape[1]
+x_train, x_valid, y_train, y_valid = train_test_split(x_train, y_train, test_size=0.175)
+
 # network parameters
 input_shape = (image_size, image_size, 1)
 batch_size = 64
 kernel_size = 3
 filters = 16
 latent_dim = 2
-epochs = 30
+epochs = 50
 
 # build encoder model
 inputs = Input(shape=input_shape, name='encoder_input')
@@ -125,10 +126,10 @@ decoded_imgs = autoencoder.predict(x_test[:n])
 plt.figure(figsize=(10, 4))
 for i in range(n):
     # original_image
-    orig_img = x_test[i].reshape(img_size, img_size)
+    orig_img = x_test[i].reshape(image_size, image_size)
 
     # reconstructed_image
-    reconst_img = decoded_imgs[i].reshape(img_size, img_size)
+    reconst_img = decoded_imgs[i].reshape(image_size, image_size)
 
     # diff image
     diff_img = ((orig_img - reconst_img)+2)/4

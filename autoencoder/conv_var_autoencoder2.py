@@ -16,7 +16,6 @@ import cv2
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 image_size = x_train.shape[1]
 
-x_train, x_valid, y_train, y_valid = train_test_split(x_train, y_train, test_size=0.175)
 # 正規化する
 x_train = x_train.astype('float32')/255.
 x_test = x_test.astype('float32')/255.

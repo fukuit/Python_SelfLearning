@@ -8,6 +8,8 @@
 
 *.dcm
 *.gz
+*.h5
+*.json
 
 *.png
 *.jpg
@@ -19,3 +21,4 @@
 *.csv
 
 log/
+data/

@@ -30,7 +30,7 @@ def parser():
     return args
 
 
-def main():
+def main(device):
     '''
     main
     '''
@@ -50,11 +50,11 @@ def main():
                     transform=transform)
 
     trainloader = DataLoader(trainset,
-                             batch_size=4,
+                             batch_size=100,
                              shuffle=True,
                              num_workers=2)
     testloader = DataLoader(testset,
-                            batch_size=4,
+                            batch_size=100,
                             shuffle=False,
                             num_workers=2)
 
@@ -62,6 +62,7 @@ def main():
 
     # model
     net = Net()
+    net.to(device)
 
     # define loss function and optimier
     criterion = nn.CrossEntropyLoss()
@@ -72,6 +73,7 @@ def main():
     for epoch in range(args.epochs):
         running_loss = 0.0
         for i, (inputs, labels) in enumerate(trainloader, 0):
+            inputs, labels = inputs.to(device), labels.to(device)
             # zero the parameter gradients
             optimizer.zero_grad()
 
@@ -83,9 +85,9 @@ def main():
 
             # print statistics
             running_loss += loss.item()
-            if i % 2000 == 1999:
+            if i % 40 == 39:
                 print('[{:d}, {:5d}] loss: {:.3f}'
-                      .format(epoch+1, i+1, running_loss/2000))
+                      .format(epoch+1, i+1, running_loss/40))
                 running_loss = 0.0
     print('Finished Training')
 
@@ -94,13 +96,15 @@ def main():
     total = 0
     with torch.no_grad():
         for (images, labels) in testloader:
+            images, labels = images.to(device), labels.to(device)
             outputs = net(images)
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
-    print('Accuracy: {:.2f} %%'.format(100 * float(correct/total)))
+    print('Accuracy: {:.2f} %'.format(100 * float(correct/total)))
 
 if __name__ == '__main__':
     start_time = time.time()
-    main()
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    main(device)
     print('elapsed time: {:.3f} [sec]'.format(time.time() - start_time))
